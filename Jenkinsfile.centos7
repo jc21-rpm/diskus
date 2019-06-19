@@ -9,32 +9,13 @@ pipeline {
   stages {
     stage('Prepare') {
       steps {
-        sh 'docker pull $DOCKER_RPMBUILD_EL7:rust'
         sh 'docker pull $DOCKER_CI_TOOLS'
       }
     }
     stage('Build') {
       steps {
         ansiColor('xterm') {
-          sh '''CWD=`pwd`
-PACKAGE=diskus
-BUILD_SPEC_ARGS=
-
-mkdir -p RPMS && chmod -R 777 RPMS
-mkdir -p SRPMS && chmod -R 777 SRPMS
-
-CMD="docker run --rm \\
-  --name rpmbuild-$BUILD_TAG \\
-  -v $CWD/RPMS:/home/rpmbuilder/rpmbuild/RPMS \\
-  -v $CWD/SRPMS:/home/rpmbuilder/rpmbuild/SRPMS \\
-  -v $CWD/SPECS:/home/rpmbuilder/rpmbuild/SPECS \\
-  -v $CWD/SOURCES:/home/rpmbuilder/rpmbuild/SOURCES \\
-  ${DOCKER_RPMBUILD_EL7}:rust \\
-  /bin/build-spec $BUILD_SPEC_ARGS -- /home/rpmbuilder/rpmbuild/SPECS/$PACKAGE.spec"
-
-$CMD
-
-exit $?'''
+          sh './build 7'
         }
       }
     }
@@ -94,7 +75,6 @@ done
         dir(path: 'RPMS') {
           archiveArtifacts(artifacts: '**/*/*.rpm', caseSensitive: true, onlyIfSuccessful: true)
         }
-
         dir(path: 'SRPMS') {
           archiveArtifacts(artifacts: '**/*.src.rpm', caseSensitive: true, onlyIfSuccessful: true, allowEmptyArchive: true)
         }

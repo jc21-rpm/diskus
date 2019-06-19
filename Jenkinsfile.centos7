@@ -1,3 +1,5 @@
+@Library('jc21')
+
 pipeline {
   options {
     buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -22,51 +24,7 @@ pipeline {
     stage('Sign') {
       steps {
         ansiColor('xterm') {
-          sh 'rm -rf sign'
-          sh 'mkdir -p sign'
-
-          dir(path: 'sign') {
-            git(url: "${RPM_SIGN_GIT_REPO}", credentialsId: "${RPM_SIGN_CREDENTIALS_ID}")
-            sh 'chmod 600 .gnupg/*'
-          }
-
-          sh '''CWD=`pwd`
-
-for RPMFILE in RPMS/*/*.rpm
-do
-  CMD="docker run --rm \\
-    --name rpmbuild-$BUILD_TAG \\
-    -v $CWD/RPMS:/data/RPMS \\
-    -v $CWD/sign:/data/sign \\
-    -v $CWD/sign/.rpmmacros:/root/.rpmmacros \\
-    -v $CWD/sign/.gnupg:/root/.gnupg \\
-    ${DOCKER_CI_TOOLS} \\
-    /data/sign/addsign.exp /data/$RPMFILE"
-
-  $CMD
-
-  # exit if bad return code
-  rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-done
-
-# source rpms
-for RPMFILE in SRPMS/*.src.rpm
-do
-  CMD="docker run --rm \\
-    --name rpmbuild-$BUILD_TAG \\
-    -v $CWD/SRPMS:/data/SRPMS \\
-    -v $CWD/sign:/data/sign \\
-    -v $CWD/sign/.rpmmacros:/root/.rpmmacros \\
-    -v $CWD/sign/.gnupg:/root/.gnupg \\
-    ${DOCKER_CI_TOOLS} \\
-    /data/sign/addsign.exp /data/$RPMFILE"
-
-  $CMD
-
-  # exit if bad return code
-  rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-done
-'''
+          rpmSign()
         }
       }
     }

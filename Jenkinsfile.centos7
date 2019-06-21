@@ -11,13 +11,13 @@ pipeline {
   stages {
     stage('Prepare') {
       steps {
-        sh 'docker pull $DOCKER_CI_TOOLS'
+        sh 'docker pull ${DOCKER_CI_TOOLS}'
       }
     }
     stage('Build') {
       steps {
         ansiColor('xterm') {
-          sh './build 7'
+          sh './build 7 rust'
         }
       }
     }

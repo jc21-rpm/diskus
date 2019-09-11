@@ -1,0 +1,7 @@
+{
+  "publish": {
+    "PACKAGE": "diskus",
+    "GH_USER": "jc21-rpm",
+    "VERSION": "0.5.0"
+  }
+}

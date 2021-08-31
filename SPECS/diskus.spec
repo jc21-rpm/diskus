@@ -4,44 +4,36 @@ Name:           diskus
 Version:        0.6.0
 Release:        1%{?dist}
 Summary:        A minimal, fast alternative to du -sh
-
 Group:          Applications/System
 License:        MIT
 URL:            https://github.com/sharkdp/%{name}
-
+Source:         https://github.com/sharkdp/%{name}/archive/v%{version}.tar.gz
 BuildRequires:  cmake, openssl-devel
 %{?el7:BuildRequires: cargo, rust}
 
 %description
-diskus is a very simple program that computes the total size of the current directory. It is a 
-parallelized version of du -sh. On my 8-core laptop, it is about ten times faster than du with 
+diskus is a very simple program that computes the total size of the current directory. It is a
+parallelized version of du -sh. On my 8-core laptop, it is about ten times faster than du with
 a cold disk cache and more than three times faster with a warm disk cache.
 
 %prep
-wget https://github.com/sharkdp/%{name}/archive/v%{version}.tar.gz
-tar xzf v%{version}.tar.gz
-
+%setup -q -n %{name}-%{version}
 
 %build
-cd %{name}-%{version}
 cargo build --release
-
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/bin
-cp %{name}-%{version}/target/release/diskus %{buildroot}/usr/bin/
-
+cp target/release/diskus %{buildroot}/usr/bin/
 
 %clean
 rm -rf %{buildroot}
 
-
 %files
 %defattr(-,root,root,-)
-%doc %{name}-%{version}/LICENSE* %{name}-%{version}/*.md
+%doc LICENSE* *.md
 /usr/bin/diskus
-
 
 %changelog
 * Tue Sep 24 2018 Jamie Curnow <jc@jc21.com> - 0.6.0-1

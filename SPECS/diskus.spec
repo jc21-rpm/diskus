@@ -2,7 +2,7 @@
 
 Name:           diskus
 Version:        0.7.0
-Release:        1%{?dist}
+Release:        1
 Summary:        A minimal, fast alternative to du -sh
 Group:          Applications/System
 License:        MIT

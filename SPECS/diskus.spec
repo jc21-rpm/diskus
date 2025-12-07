@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
 Name:           diskus
-Version:        0.7.0
+Version:        0.9.0
 Release:        1%{?dist}
 Summary:        A minimal, fast alternative to du -sh
 Group:          Applications/System
@@ -36,6 +36,9 @@ rm -rf %{buildroot}
 /usr/bin/diskus
 
 %changelog
+* Sun Dec 7 2025 Jamie Curnow <jc@jc21.com> - 0.9.0-1
+- v0.9.0
+
 * Mon Nov 15 2021 Jamie Curnow <jc@jc21.com> - 0.7.0-1
 - v0.7.0
 
